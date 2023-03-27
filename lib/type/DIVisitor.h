@@ -7,11 +7,11 @@
 #ifndef META_DIVISITOR_H
 #define META_DIVISITOR_H
 
+#include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/BinaryFormat/Dwarf.h"
 #include "llvm/IR/DebugInfo.h"
 #include "llvm/IR/DebugInfoMetadata.h"
 #include "llvm/Support/Debug.h"
-#include "llvm/ADT/SmallPtrSet.h"
 
 #include <functional>
 
@@ -30,7 +30,8 @@ class ScopeExit {
   explicit ScopeExit(Fn&& exit_fn) : exit_fn_(std::forward<Fn>(exit_fn)) {
   }
 
-  ScopeExit(const ScopeExit&)            = delete;
+  ScopeExit(const ScopeExit&) = delete;
+
   ScopeExit& operator=(const ScopeExit&) = delete;
 
   ~ScopeExit() {
@@ -77,7 +78,7 @@ class DINodeVisitor {
   }
 
   inline bool visited_node(const llvm::DINode* node) {
-      return visited_dinodes_.contains(node);
+    return visited_dinodes_.contains(node);
   }
 
  public:
@@ -154,7 +155,7 @@ class DINodeVisitor {
 
   bool traverseCompositeType(const llvm::DICompositeType* composite_type) {
     // Make sure, we do not infinitely recurse
-    if(visited_node(composite_type)) {
+    if (visited_node(composite_type)) {
       return true;
     }
 
@@ -199,16 +200,16 @@ class DIPrinter : public visitor::DINodeVisitor<DIPrinter> {
   std::string no_pointer_str(const llvm::Metadata& type) {
     std::string view;
     llvm::raw_string_ostream rso(view);
-#if LLVM_VERSION_MAJOR > 13
+#if LLVM_VERSION_MAJOR > 14
     type.print(rso, module_.value_or(nullptr));
 
-    if (module_.has_value()) {
+    if (module_) {
       return rso.str();
     }
 #else
     type.print(rso, module_.getValueOr(nullptr));
 
-    if (module_.hasValue()) {
+    if (module_) {
       return rso.str();
     }
 #endif
@@ -252,6 +253,6 @@ class DIPrinter : public visitor::DINodeVisitor<DIPrinter> {
 
 }  // namespace util
 
-}  // namespace dimeta
+}  // namespace meta
 
 #endif  // DIMETA_DIVISITOR_H
