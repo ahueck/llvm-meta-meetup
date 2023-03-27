@@ -1,0 +1,40 @@
+@PACKAGE_INIT@
+
+set_and_check(META_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+set_and_check(META_LIBRARY_DIR "@PACKAGE_LIBRARY_INSTALL_DIR@")
+set_and_check(META_BINARY_DIR "@PACKAGE_BINARY_INSTALL_DIR@")
+set_and_check(META_CMAKE_DIR "@PACKAGE_CMAKE_INSTALL_DIR@")
+
+macro (check_components comps_list)
+  set(meta_FOUND true)
+
+  foreach(component ${comps_list})
+    if(NOT TARGET meta::${component} AND NOT TARGET meta::${component}Static)
+      set(meta_${component}_FOUND false)
+      if(meta_FIND_REQUIRED_${component})
+        message(WARNING "Could not find component ${component}")
+        set(meta_FOUND false)
+      endif()
+    else()
+      set(meta_${component}_FOUND true)
+    endif()
+  endforeach()
+endmacro()
+
+if (meta_FIND_COMPONENTS)
+  foreach(component ${meta_FIND_COMPONENTS})
+    if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/meta{component}Targets.cmake)
+      include(${CMAKE_CURRENT_LIST_DIR}/meta{component}Targets.cmake)
+    endif()
+  endforeach()
+  check_components("${meta_FIND_COMPONENTS}")
+else()
+  file(GLOB
+    target-file
+    LIST_DIRECTORIES false
+    "${CMAKE_CURRENT_LIST_DIR}/meta*Targets.cmake"
+  )
+  foreach(component ${target-file})
+    include(${component})
+  endforeach()
+endif()
