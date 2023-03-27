@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# llvm-meta-meetup library
+# Copyright (c) 2023 llvm-meta-meetup authors
+# Distributed under the BSD 3-Clause License license.
+# (See accompanying file LICENSE)
+# SPDX-License-Identifier: BSD-3-Clause
+
+target=$1
+extension="${target##*.}"
+
+if [ $extension == "c" ]; then
+  compiler="@META_CLANG_EXEC@"
+else
+  compiler="@META_CLANGCXX_EXEC@"
+fi
+
+opt_tool="@META_OPT_EXEC@ @META_OPT_ARGS@"
+meta_pass_plugin="$<TARGET_FILE:meta::AnalysisPass> -meta"
+
+# shellcheck disable=SC2068
+$compiler -S -O1 -g -emit-llvm -Xclang -disable-llvm-passes -fno-discard-value-names "$target" -o - | \
+  $opt_tool -load $meta_pass_plugin 2>&1 ${@:2}

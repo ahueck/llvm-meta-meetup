@@ -1,0 +1,22 @@
+@LIT_SITE_CFG_IN_HEADER@
+
+import sys
+
+# LLVM toolchain:
+config.clang_cpp = "@META_CLANGCXX_EXEC@"
+config.clang = "@META_CLANG_EXEC@"
+config.opt = "@META_OPT_EXEC@"
+config.opt_args = "@META_OPT_ARGS@"
+config.llc = "@META_LLC_EXEC@"
+config.filecheck = "@META_FILECHECK_EXEC@"
+
+# Project related:
+config.meta_lib_dir = "@META_LIBRARY_DIR@"
+config.meta_pass_dir = "@META_PASS_DIR@"
+
+config.meta_script_dir = "@META_SCRIPT_DIR@"
+config.meta_pass = "$<TARGET_FILE_NAME:meta::AnalysisPass>"
+
+# Let the main config do the real work.
+config.loaded_site_config = True
+lit_config.load_config(config, "@META_PROJECT_DIR@/test/lit.cfg")
