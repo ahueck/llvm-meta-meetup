@@ -1,6 +1,6 @@
-# llvm-meta-meetup
+# llvm-meta-meetup &middot; [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) ![](https://github.com/ahueck/llvm-meta-meetup/workflows/Meta-CI/badge.svg?branch=main)
 
-Example project for the LLVM Social Darmstadt
+Example project for the LLVM Social Darmstadt meetup
 talk `Opaque pointers, the need for debug information and how to use them`.
 
 Finds the corresponding debug intrinsic of `alloca`s and prints their `DIType` structure to console.
