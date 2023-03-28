@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(
-    llvm-meta-meetup
-    VERSION 0.1.0
-    DESCRIPTION "An LLVM-based plugin"
-    HOMEPAGE_URL "https://github.com/ahueck/llvm-meta-meetup"
-    LANGUAGES CXX C
+  llvm-meta-meetup
+  VERSION 0.1.0
+  DESCRIPTION "An LLVM-based plugin to print DITypes"
+  HOMEPAGE_URL "https://github.com/ahueck/llvm-meta-meetup"
+  LANGUAGES CXX C
 )
 
 list(

@@ -6,17 +6,20 @@
 # (See accompanying file LICENSE)
 # SPDX-License-Identifier: BSD-3-Clause
 
-target=$1
-extension="${target##*.}"
+readonly target=$1
+readonly extension="${target##*.}"
 
 if [ $extension == "c" ]; then
-  compiler="@META_CLANG_EXEC@"
+  readonly compiler="@META_CLANG_EXEC@"
 else
-  compiler="@META_CLANGCXX_EXEC@"
+  readonly compiler="@META_CLANGCXX_EXEC@"
 fi
 
-opt_tool="@META_OPT_EXEC@ @META_OPT_ARGS@"
-meta_pass_plugin="$<TARGET_FILE:meta::AnalysisPass> -meta"
+readonly opt_tool="@META_OPT_EXEC@ @META_OPT_ARGS@"
+
+readonly metapass_bin_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly metapass_lib_dir="$(dirname "${metapass_bin_dir}")"/@CMAKE_INSTALL_LIBDIR@
+readonly meta_pass_plugin="${metapass_lib_dir}/$<TARGET_FILE_NAME:meta::AnalysisPass> -meta"
 
 # shellcheck disable=SC2068
 $compiler -S -O1 -g -emit-llvm -Xclang -disable-llvm-passes -fno-discard-value-names "$target" -o - | \
